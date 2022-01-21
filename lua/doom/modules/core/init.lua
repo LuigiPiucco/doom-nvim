@@ -1,6 +1,7 @@
-local required = {}
+local core = {}
 
-required.defaults = {
+core.defaults = {
+  nest_integrations = {},
   mapper = {},
   treesitter = {
     highlight = {
@@ -40,8 +41,8 @@ required.defaults = {
   },
 }
 
-required.packer_config = {}
-required.packer_config["nest.nvim"] = function()
+core.packer_config = {}
+core.packer_config["nest.nvim"] = function()
   local utils = require("doom.utils")
   local is_plugin_disabled = utils.is_plugin_disabled
 
@@ -52,13 +53,16 @@ required.packer_config["nest.nvim"] = function()
     local whichkey_integration = require("nest.integrations.whichkey")
     nest_package.enable(whichkey_integration)
   end
+  for _,integration in ipairs(doom.core.nest_integrations) do
+    nest_package.enable(integration)
+  end
 
   nest_package.applyKeymaps(doom.binds)
 end
-required.packer_config["nvim-mapper"] = function()
+core.packer_config["nvim-mapper"] = function()
   require("nvim-mapper").setup(doom.core.mapper)
 end
-required.packer_config["nvim-treesitter"] = function()
+core.packer_config["nvim-treesitter"] = function()
   local is_plugin_disabled = require("doom.utils").is_plugin_disabled
   require("nvim-treesitter.configs").setup(vim.tbl_deep_extend("force", doom.core.treesitter, {
     autopairs = {
@@ -90,4 +94,4 @@ required.packer_config["nvim-treesitter"] = function()
   end, 1000)
 end
 
-return required
+return core
