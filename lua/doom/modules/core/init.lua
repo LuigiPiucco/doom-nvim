@@ -1,5 +1,26 @@
+---## Core module
+
+---Add the basic functionality expected of any neovim configuration. It
+---includes treesitter's umbrella, keybindings, utilities required by many
+---plugins (such as plenary.nvim) and package management via packer.nvim. This
+---is not removable and need not be listed is your config, we add it
+---automatically.
+
 local core = {}
 
+---### Configuration and defaults
+
+---Defaults added to `doom.core`.
+---@class core.defaults
+---Settings passed verbatim to nvim-mapper's setup.
+---See their README for details.
+---@field mapper table
+---Settings passed to nvim-treesitter's setup.
+---See their README for details.
+---
+---The `autopairs.enable` key is always set to whether the autopairs module
+---is enabled.
+---@field treesitter table
 core.defaults = {
   nest_integrations = {},
   mapper = {},
@@ -52,6 +73,15 @@ core.packer_config["nest.nvim"] = function()
   if not is_plugin_disabled("whichkey") then
     local whichkey_integration = require("nest.integrations.whichkey")
     nest_package.enable(whichkey_integration)
+  end
+  if vim.g.doom_write_binds then
+    local keybind_doc_integration = require("doom-tools.docs.keybind_doc_integration")
+    nest_package.enable(keybind_doc_integration)
+    keybind_doc_integration.set_table_fields({
+      { key = "lhs", name = "Keybind" },
+      { key = "name", name = "Name" },
+    })
+    nest_package.traverse(doom.binds, { keybind_doc_integration })
   end
   for _,integration in ipairs(doom.core.nest_integrations) do
     nest_package.enable(integration)

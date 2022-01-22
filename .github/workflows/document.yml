@@ -1,0 +1,24 @@
+name: document
+
+on: [push]
+
+jobs:
+  document:
+    name: Generate documentation with pandoc
+    runs-on: ubuntu-latest
+    container:
+      image: luigipiucco/doom-nvim-ci
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v2
+      - name: Patch config
+        run: |
+          cp -f lua/doom-tools/config/config.lua lua/doom-tools/config/modules.lua .
+      - name: Generate markdown
+        run: lua/doom-tools/docs/generate.sh
+      - name: Upload documentation
+        uses: actions/upload-artifact@v2
+        with:
+          name: Doc folder
+          path: /tmp/doc
+

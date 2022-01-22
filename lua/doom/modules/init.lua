@@ -82,3 +82,9 @@ for module, cmds in pairs(doom.autocmds) do
   local augroup_name = ("doom_%s"):format(module)
   utils.make_augroup(augroup_name, cmds)
 end
+
+if vim.g.doom_write_binds then
+  local fd = vim.loop.fs_open("/tmp/doc/binds.md", "w", 438)
+  vim.loop.fs_write(fd, require("doom-tools.docs.keybind_doc_integration").print_markdown())
+  vim.loop.fs_close(fd)
+end

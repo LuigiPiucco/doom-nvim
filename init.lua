@@ -18,12 +18,4 @@ utils.load_modules("doom", { "core" })
 vim.defer_fn(function()
   -- Load Doom modules.
   utils.load_modules("doom", { "modules" })
-
-  -- Start dashboard if it is enabled and an empty buffer is opened initially.
-  if
-    not require("doom.utils").is_plugin_disabled("dashboard")
-    and vim.api.nvim_buf_get_name(0):len() == 0
-  then
-    vim.cmd("Dashboard")
-  end
 end, 0)

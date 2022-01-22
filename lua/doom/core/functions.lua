@@ -26,14 +26,10 @@ end
 -- check_updates checks for plugins updates
 functions.check_updates = function()
   local log = require("doom.utils.logging")
-  local updated_plugins, err = xpcall(function()
-    log.info("Updating the outdated plugins ...")
-    vim.cmd("PackerSync")
+  local _ = xpcall(function()
+    log.info("Updating outdated plugins ...")
+    require("packer").sync()
   end, debug.traceback)
-
-  if not updated_plugins then
-    log.error("Unable to update plugins. Traceback:\n" .. err)
-  end
 end
 
 -- Open Doom Nvim user manual and set extra options to buffer
